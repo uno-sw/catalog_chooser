@@ -1,0 +1,22 @@
+name: catalog_chooser
+description: A new Flutter project.
+
+version: 0.0.1
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  provider:
+    git:
+      url: git://github.com/rrousselGit/provider.git
+      ref: extensions
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
