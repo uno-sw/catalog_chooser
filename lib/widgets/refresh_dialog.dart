@@ -6,7 +6,7 @@ class RefreshDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = context.read<RefreshDialogController>();
+    final controller = context.watch<RefreshDialogController>();
     final value = context.select(
       (RefreshDialogController controller) => controller.value,
     );
@@ -14,9 +14,9 @@ class RefreshDialog extends StatelessWidget {
     return AlertDialog(
       title: const Text('How many items? (2-100)'),
       content: Form(
-        key: context.read<GlobalKey<FormState>>(),
+        key: context.watch<GlobalKey<FormState>>(),
         child: TextFormField(
-          controller: context.read(),
+          controller: context.watch(),
           keyboardType: TextInputType.numberWithOptions(
             signed: false,
             decimal: false,

@@ -8,7 +8,7 @@ class Suggestion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PageView.builder(
-      controller: context.read(),
+      controller: context.watch(),
       itemCount: context.select(
         (SuggestionController controller) => controller.items.length,
       ),
@@ -24,8 +24,8 @@ class SuggestedItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final suggestionController = context.read<SuggestionController>();
     final itemModel = suggestionController.createModelOfItemAt(index);
+    final suggestionController = context.watch<SuggestionController>();
 
     final textTheme = Theme.of(context).textTheme;
 

@@ -9,10 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  provider:
-    git:
-      url: git://github.com/rrousselGit/provider.git
-      ref: extensions
+  provider: ^4.1.0-dev+3
 
 dev_dependencies:
   flutter_test:

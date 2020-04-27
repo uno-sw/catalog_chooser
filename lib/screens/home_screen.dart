@@ -9,7 +9,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<HomeModel>();
+    final model = context.watch<HomeModel>();
 
     return Scaffold(
       key: model.scaffoldKey,
