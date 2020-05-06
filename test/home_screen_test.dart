@@ -14,8 +14,8 @@ void main() {
           ChangeNotifierProvider(create: (_) => PageController()),
           ChangeNotifierProvider(create: (_) => SuggestionController()),
         ],
-        child: ChangeNotifierProvider(
-          create: (context) => HomeModel(locator: context.read),
+        child: Provider<HomeModel>(
+          create: (context) => HomeModel(context.read),
           child: MaterialApp(
             home: Scaffold(
               key: scaffoldKey,

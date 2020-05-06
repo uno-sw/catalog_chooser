@@ -5,7 +5,7 @@ void main() {
   test('creates list of 10 items first', () {
     final controller = SuggestionController();
     final list = controller.items;
-    expect(controller.itemCount, 10);
+    expect(controller.items.length, 10);
     expect(list.contains(1), true);
     expect(list.contains(2), true);
     expect(list.contains(3), true);
@@ -22,7 +22,7 @@ void main() {
     final controller = SuggestionController();
     controller.refresh(5);
     final list = controller.items;
-    expect(controller.itemCount, 5);
+    expect(controller.items.length, 5);
     expect(list.contains(1), true);
     expect(list.contains(2), true);
     expect(list.contains(3), true);
@@ -33,34 +33,34 @@ void main() {
   test('creation of item models', () {
     final controller = SuggestionController(initialItems: [3, 5, 1, 2, 4]);
 
-    var itemModel = controller.createModelOfItemAt(0);
+    var itemModel = controller.model(0);
     expect(itemModel.nth.toString(), '3rd');
     expect(itemModel.nthFromEnd.toString(), '3rd');
     expect(itemModel.steps, null);
-    expect(itemModel.stepsCrossingSides, null);
+    expect(itemModel.stepsOverEdge, null);
 
-    itemModel = controller.createModelOfItemAt(1);
+    itemModel = controller.model(1);
     expect(itemModel.nth.toString(), '5th');
     expect(itemModel.nthFromEnd.toString(), '1st');
     expect(itemModel.steps.toString(), '2 steps forward');
-    expect(itemModel.stepsCrossingSides, null);
+    expect(itemModel.stepsOverEdge, null);
 
-    itemModel = controller.createModelOfItemAt(2);
+    itemModel = controller.model(2);
     expect(itemModel.nth.toString(), '1st');
     expect(itemModel.nthFromEnd.toString(), '5th');
     expect(itemModel.steps.toString(), '4 steps backward');
-    expect(itemModel.stepsCrossingSides.toString(), '1 step forward');
+    expect(itemModel.stepsOverEdge.toString(), '1 step forward');
 
-    itemModel = controller.createModelOfItemAt(3);
+    itemModel = controller.model(3);
     expect(itemModel.nth.toString(), '2nd');
     expect(itemModel.nthFromEnd.toString(), '4th');
     expect(itemModel.steps.toString(), '1 step forward');
-    expect(itemModel.stepsCrossingSides, null);
+    expect(itemModel.stepsOverEdge, null);
 
-    itemModel = controller.createModelOfItemAt(4);
+    itemModel = controller.model(4);
     expect(itemModel.nth.toString(), '4th');
     expect(itemModel.nthFromEnd.toString(), '2nd');
     expect(itemModel.steps.toString(), '2 steps forward');
-    expect(itemModel.stepsCrossingSides, null);
+    expect(itemModel.stepsOverEdge, null);
   });
 }

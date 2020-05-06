@@ -9,13 +9,11 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.watch<HomeModel>();
-
     return Scaffold(
-      key: model.scaffoldKey,
+      key: context.select((HomeModel model) => model.scaffoldKey),
       appBar: AppBar(title: const Text('Catalog Chooser')),
       floatingActionButton: FloatingActionButton(
-        onPressed: model.showRefreshDialog,
+        onPressed: () => context.read<HomeModel>().showRefreshDialog(),
         child: const Icon(Icons.refresh),
       ),
       body: const Suggestion(),
@@ -23,8 +21,8 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class HomeModel with ChangeNotifier {
-  HomeModel({@required this.locator}) : assert(locator != null);
+class HomeModel {
+  HomeModel(this.locator) : assert(locator != null);
 
   final Locator locator;
   final scaffoldKey = GlobalKey<ScaffoldState>();

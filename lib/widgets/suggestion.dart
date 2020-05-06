@@ -1,3 +1,4 @@
+import 'package:catalog_chooser/controllers/suggested_item_model.dart';
 import 'package:catalog_chooser/controllers/suggestion_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -7,26 +8,36 @@ class Suggestion extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final itemCount = context.select(
+        (SuggestionController controller) => controller.items.length,
+      );
+
     return PageView.builder(
       controller: context.watch(),
-      itemCount: context.select(
-        (SuggestionController controller) => controller.items.length,
+      itemCount: itemCount,
+      itemBuilder: (context, i) => SuggestedItem(
+        index: i,
+        itemCount: itemCount,
+        model: context.read<SuggestionController>().model(i),
       ),
-      itemBuilder: (context, i) => SuggestedItem(index: i),
     );
   }
 }
 
 class SuggestedItem extends StatelessWidget {
-  const SuggestedItem({Key key, @required this.index}) : super(key: key);
+  SuggestedItem({
+    Key key,
+    @required this.index,
+    @required this.itemCount,
+    @required this.model,
+  });
 
   final int index;
+  final int itemCount;
+  final SuggestedItemModel model;
 
   @override
   Widget build(BuildContext context) {
-    final itemModel = suggestionController.createModelOfItemAt(index);
-    final suggestionController = context.watch<SuggestionController>();
-
     final textTheme = Theme.of(context).textTheme;
 
     return Padding(
@@ -34,18 +45,18 @@ class SuggestedItem extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            '${index + 1} of ${suggestionController.itemCount}',
+            '${index + 1} of ${itemCount}',
             style: textTheme.subtitle1,
           ),
-          Text('${itemModel.nth.nth}', style: textTheme.headline1),
-          Text('${itemModel.nthFromEnd} from end', style: textTheme.bodyText1),
-          if (itemModel.steps != null)
-              Text('${itemModel.steps}', style: textTheme.bodyText1),
-          if (itemModel.stepsCrossingSides != null)
-              Text(
-                '${itemModel.stepsCrossingSides} (if endlessly scrollable)',
-                style: textTheme.bodyText1,
-              ),
+          Text('${model.nth.value}', style: textTheme.headline1),
+          Text('${model.nthFromEnd} from end', style: textTheme.bodyText1),
+          if (model.steps != null)
+            Text('${model.steps}', style: textTheme.bodyText1),
+          if (model.stepsOverEdge != null)
+            Text(
+              '${model.stepsOverEdge} (if endlessly scrollable)',
+              style: textTheme.bodyText1,
+            ),
         ],
       ),
     );
