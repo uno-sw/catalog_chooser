@@ -18,7 +18,9 @@ abstract class SuggestedItemPosition implements _$SuggestedItemPosition {
   factory SuggestedItemPosition(int value) = _SuggestedItemPosition;
 
   String get suffixLabel {
-    switch (value - (value * 0.1).floor()) {
+    if (value >= 4 && value <= 19) return 'th';
+
+    switch (value - (value * 0.1).floor() * 10) {
       case 1:  return 'st';
       case 2:  return 'nd';
       case 3:  return 'rd';
