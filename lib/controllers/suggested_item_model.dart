@@ -40,6 +40,14 @@ abstract class SuggestedItemStep implements _$SuggestedItemStep {
     @required bool forward,
   }) = _SuggestedItemStep;
 
+  factory SuggestedItemStep.forward(int value) {
+    return SuggestedItemStep(value, forward: true);
+  }
+
+  factory SuggestedItemStep.backward(int value) {
+    return SuggestedItemStep(value, forward: false);
+  }
+
   @late
   String get suffixLabel => (
         '${value <= 1 ? 'step' : 'steps'} '

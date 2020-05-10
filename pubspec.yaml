@@ -9,8 +9,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  built_collection: ^4.3.2
+  flutter_state_notifier: ^0.4.2
   freezed_annotation: ^0.7.1
-  provider: ^4.1.0-dev+3
+  provider: ^4.1.1
+  state_notifier: ^0.4.0
 
 dev_dependencies:
   flutter_test:

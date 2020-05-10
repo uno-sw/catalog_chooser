@@ -1,6 +1,7 @@
-import 'package:catalog_chooser/controllers/suggestion_controller.dart';
+import 'package:catalog_chooser/controllers/suggestion_notifier.dart';
 import 'package:catalog_chooser/screens/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_state_notifier/flutter_state_notifier.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 
@@ -12,7 +13,9 @@ void main() {
       MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => PageController()),
-          ChangeNotifierProvider(create: (_) => SuggestionController()),
+          StateNotifierProvider<SuggestionNotifier, SuggestionState>(
+            create: (_) => SuggestionNotifier(),
+          ),
         ],
         child: Provider<HomeModel>(
           create: (context) => HomeModel(context.read),

@@ -1,5 +1,5 @@
 import 'package:catalog_chooser/controllers/suggested_item_model.dart';
-import 'package:catalog_chooser/controllers/suggestion_controller.dart';
+import 'package:catalog_chooser/controllers/suggestion_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -8,17 +8,15 @@ class Suggestion extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final itemCount = context.select(
-        (SuggestionController controller) => controller.items.length,
-      );
+    final suggestion = context.watch<SuggestionState>();
 
     return PageView.builder(
       controller: context.watch(),
-      itemCount: itemCount,
+      itemCount: suggestion.nthList.length,
       itemBuilder: (context, i) => SuggestedItem(
         index: i,
-        itemCount: itemCount,
-        model: context.read<SuggestionController>().model(i),
+        itemCount: suggestion.nthList.length,
+        model: suggestion.itemModel(i),
       ),
     );
   }
@@ -45,7 +43,7 @@ class SuggestedItem extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            '${index + 1} of ${itemCount}',
+            '${index + 1} of $itemCount',
             style: textTheme.subtitle1,
           ),
           Text('${model.nth.value}', style: textTheme.headline1),

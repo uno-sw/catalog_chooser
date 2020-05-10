@@ -1,4 +1,4 @@
-import 'package:catalog_chooser/controllers/suggestion_controller.dart';
+import 'package:catalog_chooser/controllers/suggestion_notifier.dart';
 import 'package:catalog_chooser/widgets/refresh_dialog.dart';
 import 'package:catalog_chooser/widgets/suggestion.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +27,7 @@ class HomeModel {
   final Locator locator;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  SuggestionController get _suggestionController => locator();
+  SuggestionNotifier get _suggestionNotifier => locator();
   PageController get _pageController => locator();
 
   void showRefreshDialog() async {
@@ -38,10 +38,7 @@ class HomeModel {
           Provider(create: (_) => GlobalKey<FormState>()),
           ChangeNotifierProvider(
             create: (_) => TextEditingController(
-              text: context.select(
-                (SuggestionController controller) =>
-                    controller.items.length.toString(),
-              ),
+              text: '${context.watch<SuggestionState>().nthList.length}',
             ),
           ),
         ],
@@ -62,7 +59,7 @@ class HomeModel {
   }
 
   void refresh(int itemCount) {
-    _suggestionController.refresh(itemCount);
+    _suggestionNotifier.refresh(itemCount);
     _pageController.jumpToPage(0);
     showSnackBar(Text('Refreshed with $itemCount items.'));
   }
