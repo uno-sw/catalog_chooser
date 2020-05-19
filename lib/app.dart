@@ -10,11 +10,8 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Catalog Chooser',
-      navigatorKey: context.read(),
-      home: ChangeNotifierProvider(
-        create: (context) => HomeModel(locator: context.read),
-        child: const HomeScreen(),
-      ),
+      navigatorKey: context.watch(),
+      home: const HomeScreen(),
     );
   }
 }

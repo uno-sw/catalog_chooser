@@ -1,4 +1,4 @@
-import 'package:catalog_chooser/controllers/suggestion_controller.dart';
+import 'package:catalog_chooser/controllers/suggestion_notifier.dart';
 import 'package:catalog_chooser/widgets/refresh_dialog.dart';
 import 'package:catalog_chooser/widgets/suggestion.dart';
 import 'package:flutter/material.dart';
@@ -9,13 +9,13 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<HomeModel>();
-
     return Scaffold(
-      key: model.scaffoldKey,
+      key: context.select((HomeScreenController c) => c.scaffoldKey),
       appBar: AppBar(title: const Text('Catalog Chooser')),
       floatingActionButton: FloatingActionButton(
-        onPressed: model.showRefreshDialog,
+        onPressed: () {
+          context.read<HomeScreenController>().showRefreshDialog();
+        },
         child: const Icon(Icons.refresh),
       ),
       body: const Suggestion(),
@@ -23,49 +23,26 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class HomeModel with ChangeNotifier {
-  HomeModel({@required this.locator}) : assert(locator != null);
-
-  final Locator locator;
+class HomeScreenController {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  SuggestionController get _suggestionController => locator();
-  PageController get _pageController => locator();
-
   void showRefreshDialog() async {
-    final result = await showDialog<int>(
+    await showDialog(
       context: scaffoldKey.currentContext,
-      builder: (context) => MultiProvider(
-        providers: [
-          Provider(create: (_) => GlobalKey<FormState>()),
-          ChangeNotifierProvider(
-            create: (_) => TextEditingController(
-              text: context.select(
-                (SuggestionController controller) =>
-                    controller.items.length.toString(),
-              ),
-            ),
+      builder: (context) {
+        return ChangeNotifierProvider(
+          create: (_) => TextEditingController(
+            text: '${context.read<SuggestionState>().nthList.length}',
           ),
-        ],
-        child: ChangeNotifierProvider(
-          create: (context) => RefreshDialogController(locator: context.read),
-          child: const RefreshDialog(),
-        ),
-      ),
+          child: RefreshDialog(),
+      );
+      },
     );
-
-    if (result != null) refresh(result);
   }
 
   void showSnackBar(Widget content) {
     scaffoldKey.currentState.showSnackBar(
       SnackBar(content: content, behavior: SnackBarBehavior.floating),
     );
-  }
-
-  void refresh(int itemCount) {
-    _suggestionController.refresh(itemCount);
-    _pageController.jumpToPage(0);
-    showSnackBar(Text('Refreshed with $itemCount items.'));
   }
 }
