@@ -10,10 +10,12 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: context.select((HomeModel model) => model.scaffoldKey),
+      key: context.select((HomeScreenController c) => c.scaffoldKey),
       appBar: AppBar(title: const Text('Catalog Chooser')),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context.read<HomeModel>().showRefreshDialog(),
+        onPressed: () {
+          context.read<HomeScreenController>().showRefreshDialog();
+        },
         child: const Icon(Icons.refresh),
       ),
       body: const Suggestion(),
@@ -21,46 +23,26 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class HomeModel {
-  HomeModel(this.locator) : assert(locator != null);
-
-  final Locator locator;
+class HomeScreenController {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  SuggestionNotifier get _suggestionNotifier => locator();
-  PageController get _pageController => locator();
-
   void showRefreshDialog() async {
-    final result = await showDialog<int>(
+    await showDialog(
       context: scaffoldKey.currentContext,
-      builder: (context) => MultiProvider(
-        providers: [
-          Provider(create: (_) => GlobalKey<FormState>()),
-          ChangeNotifierProvider(
-            create: (_) => TextEditingController(
-              text: '${context.watch<SuggestionState>().nthList.length}',
-            ),
+      builder: (context) {
+        return ChangeNotifierProvider(
+          create: (_) => TextEditingController(
+            text: '${context.read<SuggestionState>().nthList.length}',
           ),
-        ],
-        child: ChangeNotifierProvider(
-          create: (context) => RefreshDialogController(locator: context.read),
-          child: const RefreshDialog(),
-        ),
-      ),
+          child: RefreshDialog(),
+      );
+      },
     );
-
-    if (result != null) refresh(result);
   }
 
   void showSnackBar(Widget content) {
     scaffoldKey.currentState.showSnackBar(
       SnackBar(content: content, behavior: SnackBarBehavior.floating),
     );
-  }
-
-  void refresh(int itemCount) {
-    _suggestionNotifier.refresh(itemCount);
-    _pageController.jumpToPage(0);
-    showSnackBar(Text('Refreshed with $itemCount items.'));
   }
 }

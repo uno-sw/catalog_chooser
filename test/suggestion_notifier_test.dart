@@ -1,4 +1,3 @@
-import 'package:built_collection/built_collection.dart';
 import 'package:catalog_chooser/controllers/suggested_item_model.dart';
 import 'package:catalog_chooser/controllers/suggestion_notifier.dart';
 import 'package:flutter_test/flutter_test.dart';

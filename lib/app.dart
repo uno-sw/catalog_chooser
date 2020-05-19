@@ -11,10 +11,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: 'Catalog Chooser',
       navigatorKey: context.watch(),
-      home: Provider<HomeModel>(
-        create: (context) => HomeModel(context.read),
-        child: const HomeScreen(),
-      ),
+      home: const HomeScreen(),
     );
   }
 }
