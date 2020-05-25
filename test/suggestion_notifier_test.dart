@@ -52,7 +52,7 @@ void main() {
       SuggestedItemModel(
         nth: SuggestedItemPosition(5),
         nthFromEnd: SuggestedItemPosition(1),
-        steps: SuggestedItemStep.forward(2),
+        step: SuggestedItemStep.forward(2),
       )
     );
 
@@ -61,8 +61,8 @@ void main() {
       SuggestedItemModel(
         nth: SuggestedItemPosition(1),
         nthFromEnd: SuggestedItemPosition(5),
-        steps: SuggestedItemStep.backward(4),
-        stepsOverEdge: SuggestedItemStep.forward(1),
+        step: SuggestedItemStep.backward(4),
+        stepOverEdge: SuggestedItemStep.forward(1),
       )
     );
 
@@ -71,7 +71,7 @@ void main() {
       SuggestedItemModel(
         nth: SuggestedItemPosition(2),
         nthFromEnd: SuggestedItemPosition(4),
-        steps: SuggestedItemStep.forward(1),
+        step: SuggestedItemStep.forward(1),
       )
     );
 
@@ -80,7 +80,7 @@ void main() {
       SuggestedItemModel(
         nth: SuggestedItemPosition(4),
         nthFromEnd: SuggestedItemPosition(2),
-        steps: SuggestedItemStep.forward(2),
+        step: SuggestedItemStep.forward(2),
       )
     );
   });
