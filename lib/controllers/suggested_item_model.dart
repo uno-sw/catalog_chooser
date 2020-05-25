@@ -3,19 +3,34 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'suggested_item_model.freezed.dart';
 
 @freezed
-abstract class SuggestedItemModel with _$SuggestedItemModel {
-  const factory SuggestedItemModel({
+abstract class SuggestedItemModel implements _$SuggestedItemModel {
+  SuggestedItemModel._();
+  factory SuggestedItemModel({
     @required SuggestedItemPosition nth,
     @required SuggestedItemPosition nthFromEnd,
-    SuggestedItemStep steps,
-    SuggestedItemStep stepsOverEdge,
+    SuggestedItemStep step,
+    SuggestedItemStep stepOverEdge,
   }) = _SuggestedItemModel;
+
+  int get nthRank => valueRanking.indexOf(nth.value);
+  int get nthFromEndRank => valueRanking.indexOf(nthFromEnd.value);
+  int get stepRank => valueRanking.indexOf(step.value);
+  int get stepOverEdgeRank => valueRanking.indexOf(stepOverEdge.value);
+
+  @late
+  List<int> get valueRanking =>
+      [nth.value, nthFromEnd.value, step?.value, stepOverEdge?.value]
+          .fold<List<int>>([], (prev, value) {
+            if (value == null || prev.contains(value)) return prev;
+            else return prev..add(value);
+          })
+          ..sort((a, b) => a.compareTo(b));
 }
 
 @freezed
 abstract class SuggestedItemPosition implements _$SuggestedItemPosition {
-  SuggestedItemPosition._();
-  factory SuggestedItemPosition(int value) = _SuggestedItemPosition;
+  const SuggestedItemPosition._();
+  const factory SuggestedItemPosition(int value) = _SuggestedItemPosition;
 
   String get suffixLabel {
     if (value >= 4 && value <= 19) return 'th';
@@ -50,10 +65,10 @@ abstract class SuggestedItemStep implements _$SuggestedItemStep {
 
   @late
   String get suffixLabel => (
-        '${value <= 1 ? 'step' : 'steps'} '
+        '${value <= 1 ? ' step' : ' steps'} '
         '${forward ? 'forward' : 'backward'}'
       );
 
   @override
-  String toString() => '$value $suffixLabel';
+  String toString() => '$value$suffixLabel';
 }

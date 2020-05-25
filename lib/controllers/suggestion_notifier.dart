@@ -35,8 +35,8 @@ abstract class SuggestionState implements _$SuggestionState {
     return SuggestedItemModel(
       nth: SuggestedItemPosition(nth),
       nthFromEnd: SuggestedItemPosition(nthFromEnd),
-      steps: steps,
-      stepsOverEdge: stepsOverEdge,
+      step: steps,
+      stepOverEdge: stepsOverEdge,
     );
   }
 

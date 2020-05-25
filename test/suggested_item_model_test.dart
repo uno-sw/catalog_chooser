@@ -16,4 +16,30 @@ void main() {
     expect(SuggestedItemPosition(23).toString(), '23rd');
     expect(SuggestedItemPosition(24).toString(), '24th');
   });
+
+  test('ranks values of SuggestedItemModel in ascending order', () {
+    var itemModel = SuggestedItemModel(
+      nth: SuggestedItemPosition(10),
+      nthFromEnd: SuggestedItemPosition(1),
+      step: SuggestedItemStep.forward(6),
+      stepOverEdge: SuggestedItemStep.backward(4),
+    );
+
+    expect(itemModel.nthRank, 3);
+    expect(itemModel.nthFromEndRank, 0);
+    expect(itemModel.stepRank, 2);
+    expect(itemModel.stepOverEdgeRank, 1);
+
+    itemModel = SuggestedItemModel(
+      nth: SuggestedItemPosition(2),
+      nthFromEnd: SuggestedItemPosition(9),
+      step: SuggestedItemStep.backward(8),
+      stepOverEdge: SuggestedItemStep.forward(2),
+    );
+
+    expect(itemModel.nthRank, 0);
+    expect(itemModel.nthFromEndRank, 2);
+    expect(itemModel.stepRank, 1);
+    expect(itemModel.stepOverEdgeRank, 0);
+  });
 }

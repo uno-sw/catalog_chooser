@@ -37,25 +37,80 @@ class SuggestedItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         children: [
           Text(
             '${index + 1} of $itemCount',
-            style: textTheme.subtitle1,
+            style: Theme.of(context).textTheme.subtitle1,
           ),
-          Text('${model.nth.value}', style: textTheme.headline1),
-          Text('${model.nthFromEnd} from end', style: textTheme.bodyText1),
-          if (model.steps != null)
-              Text('${model.steps}', style: textTheme.bodyText1),
-          if (model.stepsOverEdge != null)
-              Text(
-                '${model.stepsOverEdge} (if endlessly scrollable)',
-                style: textTheme.bodyText1,
+          _SuggestedItemValueText(
+            rank: model.nthRank,
+            value: model.nth.value,
+            suffix: model.nth.suffixLabel,
+          ),
+          _SuggestedItemValueText(
+            rank: model.nthFromEndRank,
+            value: model.nthFromEnd.value,
+            suffix: model.nthFromEnd.suffixLabel,
+            additional: 'from end',
+          ),
+          if (model.step != null)
+              _SuggestedItemValueText(
+                rank: model.stepRank,
+                value: model.step.value,
+                additional: model.step.suffixLabel,
               ),
+          if (model.stepOverEdge != null)
+              _SuggestedItemValueText(
+                rank: model.stepOverEdgeRank,
+                value: model.stepOverEdge.value,
+                additional: '${model.stepOverEdge.suffixLabel}\n'
+                    '(crossing edge)',
+              ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SuggestedItemValueText extends StatelessWidget {
+  const _SuggestedItemValueText({
+    Key key,
+    @required this.rank,
+    this.value,
+    this.suffix,
+    this.additional,
+  }) : super(key: key);
+
+  final int rank;
+  final int value;
+  final String suffix;
+  final String additional;
+
+  static const fontSizes = [72.0, 48.0, 32.0, 24.0];
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16.0),
+      child: Column(
+        children: [
+          Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(
+                  text: '$value',
+                  style: TextStyle(fontSize: fontSizes[rank]),
+                ),
+                if (suffix != null)
+                    TextSpan(text: suffix),
+              ],
+            ),
+          ),
+          if (additional != null)
+              Text(additional),
         ],
       ),
     );
