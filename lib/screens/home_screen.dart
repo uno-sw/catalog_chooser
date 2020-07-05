@@ -9,16 +9,34 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       key: context.select((HomeScreenController c) => c.scaffoldKey),
-      appBar: AppBar(title: const Text('Catalog Chooser')),
       floatingActionButton: FloatingActionButton(
+        foregroundColor: theme.primaryColor,
+        backgroundColor: theme.colorScheme.onPrimary,
         onPressed: () {
           context.read<HomeScreenController>().showRefreshDialog();
         },
         child: const Icon(Icons.refresh),
       ),
-      body: const Suggestion(),
+      body: DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              theme.primaryColor,
+              theme.accentColor,
+            ],
+          ),
+        ),
+        child: DefaultTextStyle(
+          style: TextStyle(color: theme.colorScheme.onPrimary),
+          child: const Suggestion(),
+        ),
+      ),
     );
   }
 }
