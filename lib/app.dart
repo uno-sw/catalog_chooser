@@ -8,12 +8,19 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const primaryColor = Color(0xFFFF5287);
+    const secondaryColor = Color(0xFFFFA44A);
+
     return MaterialApp(
       title: 'Catalog Chooser',
       navigatorKey: context.watch(),
       theme: ThemeData(
-        primaryColor: Color(0xFFFF5287),
-        accentColor: Color(0xFFFFA44A),
+        primaryColor: primaryColor,
+        accentColor: secondaryColor,
+        colorScheme: ColorScheme.light(
+          primary: primaryColor,
+          secondary: secondaryColor,
+        )
       ),
       home: const HomeScreen(),
     );
