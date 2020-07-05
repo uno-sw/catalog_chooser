@@ -11,13 +11,17 @@ class Suggestion extends StatelessWidget {
   Widget build(BuildContext context) {
     final suggestion = context.watch<SuggestionState>();
 
-    return PageView.builder(
-      controller: context.watch<SuggestionController>().pageController,
-      itemCount: suggestion.nthList.length,
-      itemBuilder: (context, i) => SuggestedItem(
-        index: i,
+    return GlowingOverscrollIndicator(
+      axisDirection: AxisDirection.right,
+      color: Theme.of(context).colorScheme.onPrimary,
+      child: PageView.builder(
+        controller: context.watch<SuggestionController>().pageController,
         itemCount: suggestion.nthList.length,
-        model: suggestion.itemModel(i),
+        itemBuilder: (context, i) => SuggestedItem(
+          index: i,
+          itemCount: suggestion.nthList.length,
+          model: suggestion.itemModel(i),
+        ),
       ),
     );
   }
@@ -37,41 +41,47 @@ class SuggestedItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              Text(
-                '${index + 1} of $itemCount',
-                style: Theme.of(context).textTheme.subtitle1,
-              ),
-              _SuggestedItemValueText(
-                rank: model.nthRank,
-                value: model.nth.value,
-                suffix: model.nth.suffixLabel,
-              ),
-              _SuggestedItemValueText(
-                rank: model.nthFromEndRank,
-                value: model.nthFromEnd.value,
-                suffix: model.nthFromEnd.suffixLabel,
-                additional: 'from end',
-              ),
-              if (model.step != null)
-                  _SuggestedItemValueText(
-                    rank: model.stepRank,
-                    value: model.step.value,
-                    additional: model.step.suffixLabel,
+    return GlowingOverscrollIndicator(
+      axisDirection: AxisDirection.down,
+      color: Theme.of(context).colorScheme.onPrimary,
+      child: SingleChildScrollView(
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                Text(
+                  '${index + 1} of $itemCount',
+                  style: Theme.of(context).textTheme.subtitle1.apply(
+                    color: Theme.of(context).colorScheme.onPrimary,
                   ),
-              if (model.stepOverEdge != null)
-                  _SuggestedItemValueText(
-                    rank: model.stepOverEdgeRank,
-                    value: model.stepOverEdge.value,
-                    additional: '${model.stepOverEdge.suffixLabel}\n'
-                        '(crossing edge)',
-                  ),
-            ],
+                ),
+                _SuggestedItemValueText(
+                  rank: model.nthRank,
+                  value: model.nth.value,
+                  suffix: model.nth.suffixLabel,
+                ),
+                _SuggestedItemValueText(
+                  rank: model.nthFromEndRank,
+                  value: model.nthFromEnd.value,
+                  suffix: model.nthFromEnd.suffixLabel,
+                  additional: 'from end',
+                ),
+                if (model.step != null)
+                    _SuggestedItemValueText(
+                      rank: model.stepRank,
+                      value: model.step.value,
+                      additional: model.step.suffixLabel,
+                    ),
+                if (model.stepOverEdge != null)
+                    _SuggestedItemValueText(
+                      rank: model.stepOverEdgeRank,
+                      value: model.stepOverEdge.value,
+                      additional: '${model.stepOverEdge.suffixLabel}\n'
+                          '(crossing edge)',
+                    ),
+              ],
+            ),
           ),
         ),
       ),

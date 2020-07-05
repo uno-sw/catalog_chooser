@@ -11,6 +11,10 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: 'Catalog Chooser',
       navigatorKey: context.watch(),
+      theme: ThemeData(
+        primaryColor: Color(0xFFFF5287),
+        accentColor: Color(0xFFFFA44A),
+      ),
       home: const HomeScreen(),
     );
   }
