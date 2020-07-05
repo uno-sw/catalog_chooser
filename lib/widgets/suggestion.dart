@@ -37,39 +37,43 @@ class SuggestedItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        children: [
-          Text(
-            '${index + 1} of $itemCount',
-            style: Theme.of(context).textTheme.subtitle1,
-          ),
-          _SuggestedItemValueText(
-            rank: model.nthRank,
-            value: model.nth.value,
-            suffix: model.nth.suffixLabel,
-          ),
-          _SuggestedItemValueText(
-            rank: model.nthFromEndRank,
-            value: model.nthFromEnd.value,
-            suffix: model.nthFromEnd.suffixLabel,
-            additional: 'from end',
-          ),
-          if (model.step != null)
-              _SuggestedItemValueText(
-                rank: model.stepRank,
-                value: model.step.value,
-                additional: model.step.suffixLabel,
+    return SingleChildScrollView(
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              Text(
+                '${index + 1} of $itemCount',
+                style: Theme.of(context).textTheme.subtitle1,
               ),
-          if (model.stepOverEdge != null)
               _SuggestedItemValueText(
-                rank: model.stepOverEdgeRank,
-                value: model.stepOverEdge.value,
-                additional: '${model.stepOverEdge.suffixLabel}\n'
-                    '(crossing edge)',
+                rank: model.nthRank,
+                value: model.nth.value,
+                suffix: model.nth.suffixLabel,
               ),
-        ],
+              _SuggestedItemValueText(
+                rank: model.nthFromEndRank,
+                value: model.nthFromEnd.value,
+                suffix: model.nthFromEnd.suffixLabel,
+                additional: 'from end',
+              ),
+              if (model.step != null)
+                  _SuggestedItemValueText(
+                    rank: model.stepRank,
+                    value: model.step.value,
+                    additional: model.step.suffixLabel,
+                  ),
+              if (model.stepOverEdge != null)
+                  _SuggestedItemValueText(
+                    rank: model.stepOverEdgeRank,
+                    value: model.stepOverEdge.value,
+                    additional: '${model.stepOverEdge.suffixLabel}\n'
+                        '(crossing edge)',
+                  ),
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -11,7 +11,6 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       key: context.select((HomeScreenController c) => c.scaffoldKey),
-      appBar: AppBar(title: const Text('Catalog Chooser')),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           context.read<HomeScreenController>().showRefreshDialog();
