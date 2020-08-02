@@ -34,7 +34,12 @@ class HomeScreen extends StatelessWidget {
         ),
         child: DefaultTextStyle(
           style: TextStyle(color: theme.colorScheme.onPrimary),
-          child: const Suggestion(),
+          child: IconTheme(
+            data: IconThemeData(
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
+            child: const Suggestion(),
+          ),
         ),
       ),
     );
