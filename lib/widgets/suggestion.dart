@@ -57,11 +57,16 @@ class SuggestedItem extends StatelessWidget {
                   ),
                 ),
                 _SuggestedItemValueText(
+                  icon: const RotatedBox(
+                    quarterTurns: 2,
+                    child: Icon(Icons.file_upload),
+                  ),
                   rank: model.nthRank,
                   value: model.nth.value,
                   suffix: model.nth.suffixLabel,
                 ),
                 _SuggestedItemValueText(
+                  icon: const Icon(Icons.file_upload),
                   rank: model.nthFromEndRank,
                   value: model.nthFromEnd.value,
                   suffix: model.nthFromEnd.suffixLabel,
@@ -69,12 +74,20 @@ class SuggestedItem extends StatelessWidget {
                 ),
                 if (model.step != null)
                     _SuggestedItemValueText(
+                      icon: Icon(model.step.forward
+                          ? Icons.arrow_downward
+                          : Icons.arrow_upward
+                      ),
                       rank: model.stepRank,
                       value: model.step.value,
                       additional: model.step.suffixLabel,
                     ),
                 if (model.stepOverEdge != null)
                     _SuggestedItemValueText(
+                      icon: Icon(model.stepOverEdge.forward
+                          ? Icons.arrow_downward
+                          : Icons.arrow_upward
+                      ),
                       rank: model.stepOverEdgeRank,
                       value: model.stepOverEdge.value,
                       additional: '${model.stepOverEdge.suffixLabel}\n'
@@ -92,12 +105,14 @@ class SuggestedItem extends StatelessWidget {
 class _SuggestedItemValueText extends StatelessWidget {
   const _SuggestedItemValueText({
     Key key,
+    @required this.icon,
     @required this.rank,
     this.value,
     this.suffix,
     this.additional,
   }) : super(key: key);
 
+  final Widget icon;
   final int rank;
   final int value;
   final String suffix;
@@ -109,22 +124,29 @@ class _SuggestedItemValueText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16.0),
-      child: Column(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text.rich(
-            TextSpan(
-              children: [
+          icon,
+          const SizedBox(width: 8.0),
+          Column(
+            children: [
+              Text.rich(
                 TextSpan(
-                  text: '$value',
-                  style: TextStyle(fontSize: fontSizes[rank]),
+                  children: [
+                    TextSpan(
+                      text: '$value',
+                      style: TextStyle(fontSize: fontSizes[rank]),
+                    ),
+                    if (suffix != null)
+                        TextSpan(text: suffix),
+                  ],
                 ),
-                if (suffix != null)
-                    TextSpan(text: suffix),
-              ],
-            ),
+              ),
+              if (additional != null)
+                  Text(additional),
+            ],
           ),
-          if (additional != null)
-              Text(additional),
         ],
       ),
     );
