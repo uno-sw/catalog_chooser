@@ -1,8 +1,9 @@
-import 'package:catalog_chooser/controllers/suggested_item_model.dart';
 import 'package:catalog_chooser/controllers/suggestion_notifier.dart';
 import 'package:catalog_chooser/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'suggested_item.dart';
 
 class Suggestion extends StatelessWidget {
   const Suggestion({Key key}) : super(key: key);
@@ -11,144 +12,44 @@ class Suggestion extends StatelessWidget {
   Widget build(BuildContext context) {
     final suggestion = context.watch<SuggestionState>();
 
-    return GlowingOverscrollIndicator(
-      axisDirection: AxisDirection.right,
-      color: Theme.of(context).colorScheme.onPrimary,
-      child: PageView.builder(
-        controller: context.watch<SuggestionController>().pageController,
-        itemCount: suggestion.nthList.length,
-        itemBuilder: (context, i) => SuggestedItem(
-          index: i,
-          itemCount: suggestion.nthList.length,
-          model: suggestion.itemModel(i),
-        ),
-      ),
-    );
-  }
-}
-
-class SuggestedItem extends StatelessWidget {
-  SuggestedItem({
-    Key key,
-    @required this.index,
-    @required this.itemCount,
-    @required this.model,
-  });
-
-  final int index;
-  final int itemCount;
-  final SuggestedItemModel model;
-
-  @override
-  Widget build(BuildContext context) {
-    return GlowingOverscrollIndicator(
-      axisDirection: AxisDirection.down,
-      color: Theme.of(context).colorScheme.onPrimary,
-      child: SingleChildScrollView(
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                Text(
-                  '${index + 1} of $itemCount',
-                  style: Theme.of(context).textTheme.subtitle1.apply(
-                    color: Theme.of(context).colorScheme.onPrimary,
-                  ),
-                ),
-                _SuggestedItemValueText(
-                  icon: const RotatedBox(
-                    quarterTurns: 2,
-                    child: Icon(Icons.file_upload),
-                  ),
-                  rank: model.nthRank,
-                  value: model.nth.value,
-                  suffix: model.nth.suffixLabel,
-                ),
-                _SuggestedItemValueText(
-                  icon: const Icon(Icons.file_upload),
-                  rank: model.nthFromEndRank,
-                  value: model.nthFromEnd.value,
-                  suffix: model.nthFromEnd.suffixLabel,
-                  additional: 'from end',
-                ),
-                if (model.step != null)
-                    _SuggestedItemValueText(
-                      icon: Icon(model.step.forward
-                          ? Icons.arrow_downward
-                          : Icons.arrow_upward
-                      ),
-                      rank: model.stepRank,
-                      value: model.step.value,
-                      additional: model.step.suffixLabel,
-                    ),
-                if (model.stepOverEdge != null)
-                    _SuggestedItemValueText(
-                      icon: Icon(model.stepOverEdge.forward
-                          ? Icons.arrow_downward
-                          : Icons.arrow_upward
-                      ),
-                      rank: model.stepOverEdgeRank,
-                      value: model.stepOverEdge.value,
-                      additional: '${model.stepOverEdge.suffixLabel}\n'
-                          '(crossing edge)',
-                    ),
-              ],
+    return Stack(
+      children: [
+        GlowingOverscrollIndicator(
+          axisDirection: AxisDirection.right,
+          color: Theme.of(context).colorScheme.onPrimary,
+          child: PageView.builder(
+            controller: context.watch<SuggestionController>().pageController,
+            itemCount: suggestion.nthList.length,
+            itemBuilder: (context, i) => SuggestedItem(
+              index: i,
+              itemCount: suggestion.nthList.length,
+              model: suggestion.itemModel(i),
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _SuggestedItemValueText extends StatelessWidget {
-  const _SuggestedItemValueText({
-    Key key,
-    @required this.icon,
-    @required this.rank,
-    this.value,
-    this.suffix,
-    this.additional,
-  }) : super(key: key);
-
-  final Widget icon;
-  final int rank;
-  final int value;
-  final String suffix;
-  final String additional;
-
-  static const fontSizes = [72.0, 48.0, 32.0, 24.0];
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          icon,
-          const SizedBox(width: 8.0),
-          Column(
-            children: [
-              Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(
-                      text: '$value',
-                      style: TextStyle(fontSize: fontSizes[rank]),
-                    ),
-                    if (suffix != null)
-                        TextSpan(text: suffix),
-                  ],
+        SafeArea(
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              margin: const EdgeInsets.only(bottom: 32.0),
+              padding: const EdgeInsets.symmetric(
+                vertical: 8.0,
+                horizontal: 16.0,
+              ),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.onPrimary,
+                borderRadius: BorderRadius.circular(32.0),
+              ),
+              child: Text(
+                'Swipe left to see next suggestion',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
-              if (additional != null)
-                  Text(additional),
-            ],
+            ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
