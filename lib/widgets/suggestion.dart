@@ -3,6 +3,8 @@ import 'package:catalog_chooser/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'floating_panel.dart';
+import 'page_indicator.dart';
 import 'suggested_item.dart';
 
 class Suggestion extends StatelessWidget {
@@ -11,6 +13,7 @@ class Suggestion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final suggestion = context.watch<SuggestionState>();
+    final pageController = context.watch<SuggestionController>().pageController;
 
     return Stack(
       children: [
@@ -18,33 +21,25 @@ class Suggestion extends StatelessWidget {
           axisDirection: AxisDirection.right,
           color: Theme.of(context).colorScheme.onPrimary,
           child: PageView.builder(
-            controller: context.watch<SuggestionController>().pageController,
+            controller: pageController,
             itemCount: suggestion.nthList.length,
-            itemBuilder: (context, i) => SuggestedItem(
-              index: i,
-              itemCount: suggestion.nthList.length,
-              model: suggestion.itemModel(i),
-            ),
+            itemBuilder: (context, i) {
+              return SuggestedItem(model: suggestion.itemModel(i));
+            },
           ),
         ),
-        SafeArea(
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              margin: const EdgeInsets.only(bottom: 32.0),
-              padding: const EdgeInsets.symmetric(
-                vertical: 8.0,
-                horizontal: 16.0,
-              ),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.onPrimary,
-                borderRadius: BorderRadius.circular(32.0),
-              ),
+        Align(
+          alignment: Alignment.topCenter,
+          child: const PageIndicator(),
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 32.0),
+            child: FloatingPanel(
               child: Text(
                 'Swipe left to see next suggestion',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.primary,
-                ),
+                style: TextStyle(color: Theme.of(context).colorScheme.primary),
               ),
             ),
           ),

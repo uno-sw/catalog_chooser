@@ -6,13 +6,9 @@ import 'suggested_item_value.dart';
 class SuggestedItem extends StatelessWidget {
   SuggestedItem({
     Key key,
-    @required this.index,
-    @required this.itemCount,
     @required this.model,
   });
 
-  final int index;
-  final int itemCount;
   final SuggestedItemModel model;
 
   @override
@@ -26,12 +22,7 @@ class SuggestedItem extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                Text(
-                  '${index + 1} of $itemCount',
-                  style: Theme.of(context).textTheme.subtitle1.apply(
-                    color: Theme.of(context).colorScheme.onPrimary,
-                  ),
-                ),
+                const SizedBox(height: 64.0),
                 SuggestedItemValue(
                   icon: const RotatedBox(
                     quarterTurns: 2,
