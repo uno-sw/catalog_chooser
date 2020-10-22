@@ -1,17 +1,17 @@
 import 'package:catalog_chooser/controllers/suggestion_notifier.dart';
 import 'package:catalog_chooser/widgets/suggestion.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'floating_panel.dart';
 
-class PageIndicator extends StatelessWidget {
+class PageIndicator extends ConsumerWidget {
   const PageIndicator({Key key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final suggestion = context.watch<SuggestionState>();
-    final pageController = context.watch<SuggestionController>().pageController;
+  Widget build(BuildContext context, ScopedReader watch) {
+    final suggestion = watch(suggestionNotifierProvider.state);
+    final pageController = watch(suggestionControllerProvider).pageController;
 
     return Padding(
       padding: const EdgeInsets.only(top: 16.0),

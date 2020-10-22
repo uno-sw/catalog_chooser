@@ -1,19 +1,19 @@
 import 'package:catalog_chooser/controllers/suggestion_notifier.dart';
 import 'package:catalog_chooser/screens/home_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'floating_panel.dart';
 import 'page_indicator.dart';
 import 'suggested_item.dart';
 
-class Suggestion extends StatelessWidget {
+class Suggestion extends ConsumerWidget {
   const Suggestion({Key key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final suggestion = context.watch<SuggestionState>();
-    final pageController = context.watch<SuggestionController>().pageController;
+  Widget build(BuildContext context, ScopedReader watch) {
+    final suggestion = watch(suggestionNotifierProvider.state);
+    final pageController = watch(suggestionControllerProvider).pageController;
 
     return Stack(
       children: [
@@ -49,14 +49,19 @@ class Suggestion extends StatelessWidget {
   }
 }
 
-class SuggestionController with ChangeNotifier {
-  SuggestionController(this.locator) : assert(locator != null);
+final suggestionControllerProvider =
+    ChangeNotifierProvider((ref) => SuggestionController(ref.read));
 
-  final Locator locator;
+class SuggestionController with ChangeNotifier {
+  SuggestionController(this.read);
+
+  final Reader read;
   final pageController = PageController();
 
-  SuggestionNotifier get _suggestionNotifier => locator();
-  HomeScreenController get _homeScreenController => locator();
+  SuggestionNotifier get _suggestionNotifier =>
+      read(suggestionNotifierProvider);
+  HomeScreenController get _homeScreenController =>
+      read(homeScreenControllerProvider);
 
   @override
   void dispose() {

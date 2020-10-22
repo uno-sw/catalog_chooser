@@ -1,27 +1,21 @@
-import 'package:catalog_chooser/controllers/suggestion_notifier.dart';
+import 'package:catalog_chooser/app.dart';
 import 'package:catalog_chooser/screens/home_screen.dart';
-import 'package:catalog_chooser/widgets/suggestion.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_state_notifier/flutter_state_notifier.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:provider/provider.dart';
 
 void main() {
   testWidgets('refreshes the state', (tester) async {
+    final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
+
     await tester.pumpWidget(
-      MultiProvider(
-        providers: [
-          Provider(create: (_) => HomeScreenController()),
-          StateNotifierProvider<SuggestionNotifier, SuggestionState>(
-            create: (_) => SuggestionNotifier(),
-          ),
+      ProviderScope(
+        overrides: [
+          scaffoldMessengerKeyProvider.overrideWithValue(scaffoldMessengerKey),
         ],
-        child: ChangeNotifierProvider(
-          create: (context) => SuggestionController(context.read),
-          child: MaterialApp(
-            navigatorKey: GlobalKey<NavigatorState>(),
-            home: const HomeScreen(),
-          ),
+        child: MaterialApp(
+          scaffoldMessengerKey: scaffoldMessengerKey,
+          home: const HomeScreen(),
         ),
       ),
     );

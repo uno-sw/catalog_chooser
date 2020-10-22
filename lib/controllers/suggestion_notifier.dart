@@ -1,5 +1,6 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:state_notifier/state_notifier.dart';
 
@@ -39,8 +40,10 @@ abstract class SuggestionState implements _$SuggestionState {
       stepOverEdge: stepsOverEdge,
     );
   }
-
 }
+
+final suggestionNotifierProvider =
+    StateNotifierProvider((ref) => SuggestionNotifier());
 
 class SuggestionNotifier extends StateNotifier<SuggestionState> {
   SuggestionNotifier({List<int> initialList})

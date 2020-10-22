@@ -1,23 +1,25 @@
-import 'package:catalog_chooser/controllers/suggestion_notifier.dart';
+import 'package:catalog_chooser/app.dart';
 import 'package:catalog_chooser/widgets/refresh_dialog.dart';
 import 'package:catalog_chooser/widgets/suggestion.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({Key key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ScopedReader watch) {
     final theme = Theme.of(context);
 
     return Scaffold(
-      key: context.select((HomeScreenController c) => c.scaffoldKey),
       floatingActionButton: FloatingActionButton(
         foregroundColor: theme.primaryColor,
         backgroundColor: theme.colorScheme.onPrimary,
         onPressed: () {
-          context.read<HomeScreenController>().showRefreshDialog();
+          return showDialog<void>(
+            context: context,
+            builder: (_) => RefreshDialog(),
+          );
         },
         child: const Icon(Icons.refresh),
       ),
@@ -46,25 +48,16 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class HomeScreenController {
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+final homeScreenControllerProvider =
+    Provider<HomeScreenController>((ref) => HomeScreenController(ref.read));
 
-  void showRefreshDialog() async {
-    await showDialog(
-      context: scaffoldKey.currentContext,
-      builder: (context) {
-        return ChangeNotifierProvider(
-          create: (_) => TextEditingController(
-            text: '${context.read<SuggestionState>().nthList.length}',
-          ),
-          child: RefreshDialog(),
-      );
-      },
-    );
-  }
+class HomeScreenController {
+  const HomeScreenController(this.read);
+
+  final Reader read;
 
   void showSnackBar(Widget content) {
-    scaffoldKey.currentState.showSnackBar(
+    read(scaffoldMessengerKeyProvider).currentState.showSnackBar(
       SnackBar(content: content, behavior: SnackBarBehavior.floating),
     );
   }
